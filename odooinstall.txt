@@ -18,7 +18,7 @@ sudo apt-get install git python3 python3-pip build-essential wget python3-dev py
 
 echo "Installing pip Dependencies"
 sudo apt-get install libpq-dev python-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev libffi-dev -y
-sudo -H pip3 install -r https://raw.githubusercontent.com/odoo/odoo/master/requirements.txt -y
+sudo -H pip3 install -r https://raw.githubusercontent.com/odoo/odoo/master/requirements.txt
 
 echo "Installing other req packages"
 sudo apt-get install nodejs npm -y
@@ -32,7 +32,6 @@ sudo cp /usr/local/bin/wkhtmltoimage /usr/bin/wkhtmltoimage
 sudo cp /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 
 echo "Fixing Broken installs"
-pip install PyPDF2
 sudo apt --fix-broken install -y
 
 echo "Creating Log Dir"
@@ -64,6 +63,12 @@ echo -e "     \e]8;;localhost:8069\alocalhost:8069\e]8;;\a"
 sudo su - odoo -s /bin/bash -c "
 cd /odoo/odoo-server
 ./odoo-bin -c /etc/odoo-server.conf"\'' >> .bash_aliases && source .bash_aliases
+
+echo "Adding Odoo to Upstart"
+sudo mkdir /etc/init
+sudo touch /etc/init/odoo
+sudo su root -c "printf $'sudo su - odoo -s /bin/bash -c 'cd /odoo/odoo-server && ./odoo-bin -c /etc/odoo-server.conf' ' >> /etc/init/odoo" 
+
 
 echo "Starting Odoo"
 odoo_start
