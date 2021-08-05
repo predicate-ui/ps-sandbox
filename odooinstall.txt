@@ -31,6 +31,9 @@ sudo dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb
 sudo cp /usr/local/bin/wkhtmltoimage /usr/bin/wkhtmltoimage
 sudo cp /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 
+echo "Fixing Broken installs"
+sudo apt --fix-broken install -y
+
 echo "Creating Log Dir"
 sudo mkdir /var/log/odoo
 sudo chown odoo:odoo /var/log/odoo
@@ -60,6 +63,12 @@ echo -e "     \e]8;;localhost:8069\alocalhost:8069\e]8;;\a"
 sudo su - odoo -s /bin/bash -c "
 cd /odoo/odoo-server
 ./odoo-bin -c /etc/odoo-server.conf"\'' >> .bash_aliases && source .bash_aliases
+
+echo "Adding Odoo to Upstart"
+sudo mkdir /etc/init
+sudo touch /etc/init/odoo
+sudo su root -c "printf $'sudo su - odoo -s /bin/bash -c 'cd /odoo/odoo-server && ./odoo-bin -c /etc/odoo-server.conf' ' >> /etc/init/odoo" 
+
 
 echo "Starting Odoo"
 odoo_start
