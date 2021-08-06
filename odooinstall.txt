@@ -1,51 +1,55 @@
-echo "Installing Odoo 14 on Ubuntu 20.04 LTS"
+# Colors for clarity in output
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 
-echo "Updating Server"
+echo -e "${RED}Installing Odoo 14 on Ubuntu 20.04 LTS"
+
+echo -e "${RED}Updating Server"
 sudo apt-get update
 sudo apt-get upgrade -y
 
-echo "Creating Odoo User"
+echo -e "${RED}Creating Odoo User"
 sudo adduser -system -home=/opt/odoo -group odoo
 
-echo "Installing PostreSQL Server"
+echo -e "${RED}Installing PostreSQL Server"
 sudo apt-get install postgresql -y
 
-echo "Creating Odoo user for PostgreSQL"
+echo -e "${RED}Creating Odoo user for PostgreSQL"
 sudo su - postgres -c "createuser -s odoo" 2> /dev/null || true
 
-echo "Installing Python Dependencies"
+echo -e "${RED}Installing Python Dependencies"
 sudo apt-get install git python3 python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libjpeg-dev gdebi -y
 
-echo "Installing pip Dependencies"
+echo -e "${RED}Installing pip Dependencies"
 sudo apt-get install libpq-dev python-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev libffi-dev -y
 sudo -H pip3 install -r https://raw.githubusercontent.com/odoo/odoo/master/requirements.txt
 
-echo "Installing other req packages"
+echo -e "${RED}Installing other req packages"
 sudo apt-get install nodejs npm -y
 sudo npm install -g rtlcss
 
-echo "Installing wkhtmltopdf"
+echo -e "${RED}Installing wkhtmltopdf"
 sudo apt-get install xfonts-75dpi -y
 sudo wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb
 sudo dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb
 sudo cp /usr/local/bin/wkhtmltoimage /usr/bin/wkhtmltoimage
 sudo cp /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 
-echo "Fixing Broken installs"
+echo -e "${RED}Fixing Broken installs"
 sudo apt --fix-broken install -y
 
-echo "Creating Log Dir"
+echo -e "${RED}Creating Log Dir"
 sudo mkdir /var/log/odoo
 sudo chown odoo:odoo /var/log/odoo
 
-echo "Installing Odoo"
+echo -e "${RED}Installing Odoo"
 sudo apt-get install git
 sudo git clone --depth 1 --branch master https://www.github.com/odoo/odoo /odoo/odoo-server
 
-echo "Setting permissions on home folder"
+echo -e "${RED}Setting permissions on home folder"
 sudo chown -R odoo:odoo /odoo/*
 
-echo "Creating server config file"
+echo -e "${RED}Creating server config file"
 sudo touch /etc/odoo-server.conf
 sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/odoo-server.conf" 
 sudo su root -c "printf 'admin_passwd = admin\n' >> /etc/odoo-server.conf"
@@ -55,22 +59,23 @@ sudo su root -c "printf 'addons_path=/odoo/odoo-server/addons\n' >> /etc/odoo-se
 sudo chown odoo:odoo /etc/odoo-server.conf 
 sudo chmod 640 /etc/odoo-server.conf 
 
-echo "Writing alias for 'odoo_start'"
-echo $'alias odoo_start=\'
-echo "Launching your odoo instance."
-echo "Go to web browser and access your odoo at:"
-echo -e "     \e]8;;localhost:8069\alocalhost:8069\e]8;;\a"
-sudo su - odoo -s /bin/bash -c "
-cd /odoo/odoo-server
-./odoo-bin -c /etc/odoo-server.conf"\'' >> .bash_aliases && source .bash_aliases
+# uncomment to generate alias
+# echo -e "${RED}Writing alias for 'odoo_start'"
+# echo $'alias odoo_start=\'
+# echo "Launching your odoo instance."
+# echo "Go to web browser and access your odoo at:"
+# echo -e "     \e]8;;localhost:8069\alocalhost:8069\e]8;;\a"
+# sudo su - odoo -s /bin/bash -c "
+# cd /odoo/odoo-server
+# ./odoo-bin -c /etc/odoo-server.conf"\'' >> .bash_aliases && source .bash_aliases
 
-echo "Adding Odoo to systemd"
+echo -e "${RED}Adding Odoo to systemd"
+
+sudo su root -c" printf '#/etc/systemd/system/odoo.service
 [Unit]
 Description=Odoo
 Requires=postgresql.service
 After=network.target postgresql.service
-
-sudo prinf '#/etc/systemd/system/odoo.service
 [Service]
 Type=simple
 SyslogIdentifier=odoo
@@ -81,17 +86,18 @@ ExecStart=/usr/bin/python3 /odoo/odoo-server/odoo-bin -c /etc/odoo-server.conf
 StandardOutput=journal+console
 
 [Install]
-WantedBy=multi-user.target' >> /etc/systemd/system/odoo.service
+WantedBy=multi-user.target' >> /etc/systemd/system/odoo.service"
+
 sudo systemctl daemon-reload
 sudo systemctl enable --now odoo
 sudo systemctl status odoo
 
 # Uncomment to use with Upstart
-# echo "Adding Odoo to Upstart"
+# echo -e "${RED}Adding Odoo to Upstart"
 # sudo mkdir /etc/init
 # sudo touch /etc/init/odoo
 # sudo su root -c "printf $'sudo su - odoo -s /bin/bash -c \'cd /odoo/odoo-server && ./odoo-bin -c /etc/odoo-server.conf\' ' >> /etc/init/odoo" 
 
-
-echo "Starting Odoo"
-odoo_start
+# uncomment to run in current shell
+# echo -e "${RED}Starting Odoo"
+# odoo_start
