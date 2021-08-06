@@ -64,10 +64,33 @@ sudo su - odoo -s /bin/bash -c "
 cd /odoo/odoo-server
 ./odoo-bin -c /etc/odoo-server.conf"\'' >> .bash_aliases && source .bash_aliases
 
-echo "Adding Odoo to Upstart"
-sudo mkdir /etc/init
-sudo touch /etc/init/odoo
-sudo su root -c "printf $'sudo su - odoo -s /bin/bash -c \'cd /odoo/odoo-server && ./odoo-bin -c /etc/odoo-server.conf\' ' >> /etc/init/odoo" 
+echo "Adding Odoo to systemd"
+[Unit]
+Description=Odoo
+Requires=postgresql.service
+After=network.target postgresql.service
+
+sudo prinf '#/etc/systemd/system/odoo.service
+[Service]
+Type=simple
+SyslogIdentifier=odoo
+PermissionsStartOnly=true
+User=odoo
+Group=odoo
+ExecStart=/usr/bin/python3 /odoo/odoo-server/odoo-bin -c /etc/odoo-server.conf
+StandardOutput=journal+console
+
+[Install]
+WantedBy=multi-user.target' >> /etc/systemd/system/odoo.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now odoo
+sudo systemctl status odoo
+
+# Uncomment to use with Upstart
+# echo "Adding Odoo to Upstart"
+# sudo mkdir /etc/init
+# sudo touch /etc/init/odoo
+# sudo su root -c "printf $'sudo su - odoo -s /bin/bash -c \'cd /odoo/odoo-server && ./odoo-bin -c /etc/odoo-server.conf\' ' >> /etc/init/odoo" 
 
 
 echo "Starting Odoo"
