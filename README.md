@@ -1,10 +1,23 @@
 # ps-sandbox
 
-For usage in Indecor Homegoods:
+## Indecor Homegoods:
 
+Odoo with FTP
 
-git clone https://github.com/predicatestudio/ps-sandbox.git
+### Instance Info
 
-bash ps-sandbox/odooinstall.txt
+ami ami-00399ec92321828f5 
 
-bash ps-sandbox/ftpinstall.txt
+t2.medium 20gb
+
+Security Group: Odoo Server
+
+use predicate key
+
+connect elastic IP
+
+### Boot Script
+
+    git clone https://github.com/predicatestudio/ps-sandbox.git && bash ps-sandbox/odooinstall.txt
+
+    bash ps-sandbox/ftpinstall.txt
