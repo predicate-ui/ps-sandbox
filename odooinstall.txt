@@ -67,7 +67,7 @@ cd /odoo/odoo-server
 echo "Adding Odoo to Upstart"
 sudo mkdir /etc/init
 sudo touch /etc/init/odoo
-sudo su root -c "printf $'sudo su - odoo -s /bin/bash -c 'cd /odoo/odoo-server && ./odoo-bin -c /etc/odoo-server.conf' ' >> /etc/init/odoo" 
+sudo su root -c "printf $'sudo su - odoo -s /bin/bash -c \'cd /odoo/odoo-server && ./odoo-bin -c /etc/odoo-server.conf\' ' >> /etc/init/odoo" 
 
 
 echo "Starting Odoo"
