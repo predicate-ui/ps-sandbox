@@ -21,3 +21,7 @@ connect elastic IP
     git clone https://github.com/predicatestudio/ps-sandbox.git && bash ps-sandbox/odooinstall.txt
 
     bash ps-sandbox/ftpinstall.txt
+    
+### Helpful Odoo Links
+
+https://www.odoo.com/documentation/14.0/developer.html
