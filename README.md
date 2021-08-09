@@ -10,7 +10,7 @@ ami ami-00399ec92321828f5
 
 t2.medium 20gb
 
-Security Group: Odoo Server
+Security Group: Odoo Server sg-0e7ec593b96ef68c0
 
 use predicate key
 
