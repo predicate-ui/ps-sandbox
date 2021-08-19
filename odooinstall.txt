@@ -101,3 +101,8 @@ sudo systemctl status odoo
 # uncomment to run in current shell
 # echo -e "${RED}Starting Odoo${NC}"
 # odoo_start
+
+echo -e "${RED}Initializing Indecor DB${NC}"
+git clone https://github.com/predicatestudio/ps-sandbox-seeds.git
+curl -F 'master_pwd=6bt4-stfb-4uiv' -F backup_file=@/home/ubuntu/ps-sandbox-seeds/indecor/indecor_odoo_db_v1.zip -F 'copy=true' -F 'name=indecor_odoo_db' http://localhost:8069/web/database/restore
+
