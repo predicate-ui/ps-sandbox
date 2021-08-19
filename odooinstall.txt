@@ -29,9 +29,10 @@ sudo apt-get install nodejs npm -y
 sudo npm install -g rtlcss
 
 echo -e "${RED}Installing wkhtmltopdf${NC}"
+sudo apt --fix-broken install -y
 sudo apt-get install xfonts-75dpi -y
-sudo wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb
-sudo dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb
+sudo wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb
+sudo dpkg -i wkhtmltox_0.12.6-1.focal_amd64.deb
 sudo cp /usr/local/bin/wkhtmltoimage /usr/bin/wkhtmltoimage
 sudo cp /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 
