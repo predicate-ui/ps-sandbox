@@ -7,16 +7,18 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from json import JSONDecodeError
 import email
-import time
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.audio import MIMEAudio
+import os
+from email.mime.image import MIMEImage
+from email.mime.base import MIMEBase
+import mimetypes
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["modify"]
-CRED_PATH = Path(
-    "/home/benjamin/predicatestudio/ps-sandbox/IndecorOdoo/email_bot/IndecorEmailBot.json"
-)
+CRED_PATH = Path("gmapi/IndecorEmailBot.json")
 TOKEN_PATH = Path("token.json")
 
 
@@ -163,7 +165,8 @@ class GmailUser:
             message = self._create_text_message(to, subject, message_text)
         else:
             message = self._create_attachment_message(to, subject, message_text, file)
-        # Not making a new subclass just for this attirbute but need to initialize the variable for replies
+        # Not making a new subclass just for this attirbute
+        # but need to initialize the variable for replies
         message.threadId = None
         return message
 
